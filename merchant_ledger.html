@@ -1,0 +1,2924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Grand Merchant's Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=IM+Fell+English:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   MERCHANT LEDGER — CSS DESIGN SYSTEM
+   Aged parchment, wax seals, medieval trade aesthetic
+   ============================================================ */
+
+:root {
+  --parchment:        #f4e8c1;
+  --parchment-dark:   #e8d49a;
+  --parchment-aged:   #dfc98a;
+  --ink:              #2c1a0e;
+  --ink-faded:        #5c3d20;
+  --ink-light:        #8b5e3c;
+  --brass:            #b5892a;
+  --brass-dark:       #8b6820;
+  --brass-light:      #d4aa4a;
+  --wax-red:          #8b1a1a;
+  --wax-green:        #1a5c2a;
+  --wood:             #6b3f1a;
+  --wood-light:       #8b5e3c;
+  --wood-dark:        #3d1f0a;
+  --vellum:           #f9f0d8;
+  --shadow:           rgba(44,26,14,0.3);
+  --gold-coin:        #d4aa4a;
+  --silver-coin:      #aaa8a0;
+  --price-up:         #3d6b1a;
+  --price-down:       #6b1a1a;
+  --scroll-bg:        #ede0b8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--wood-dark);
+  font-family: 'Crimson Text', Georgia, serif;
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    repeating-linear-gradient(
+      90deg, transparent, transparent 40px,
+      rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px
+    ),
+    repeating-linear-gradient(
+      0deg, transparent, transparent 40px,
+      rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px
+    );
+}
+
+/* ─── NOISE TEXTURE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.6;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--wood-dark); }
+::-webkit-scrollbar-thumb { background: var(--brass-dark); border-radius: 2px; }
+
+/* ─── HEADER / TITLE BANNER ─── */
+.game-header {
+  background: linear-gradient(135deg, var(--wood-dark) 0%, var(--wood) 50%, var(--wood-dark) 100%);
+  border-bottom: 4px solid var(--brass);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.game-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 10px,
+    rgba(181,137,42,0.05) 10px, rgba(181,137,42,0.05) 11px
+  );
+}
+.header-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header-title {
+  display: flex; align-items: center; gap: 12px;
+}
+.wax-seal {
+  width: 56px; height: 56px;
+  background: radial-gradient(circle at 40% 35%, var(--wax-red), #5a0e0e);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1);
+  border: 2px solid #6b1a1a;
+  flex-shrink: 0;
+  animation: sealGlow 3s ease-in-out infinite;
+}
+@keyframes sealGlow {
+  0%,100% { box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 0 rgba(139,26,26,0); }
+  50% { box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 20px rgba(139,26,26,0.4); }
+}
+.title-text h1 {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 28px;
+  color: var(--brass-light);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+.title-text p {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--parchment-aged);
+  font-size: 11px;
+  opacity: 0.8;
+  letter-spacing: 2px;
+  margin-top: 3px;
+}
+.header-stats {
+  display: flex; gap: 16px; flex-wrap: wrap;
+}
+.stat-pill {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--brass-dark);
+  border-radius: 4px;
+  padding: 6px 14px;
+  text-align: center;
+}
+.stat-pill .label {
+  font-family: 'IM Fell English', serif;
+  font-size: 10px;
+  color: var(--parchment-aged);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+}
+.stat-pill .value {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brass-light);
+}
+.stat-pill .value.gold { color: var(--gold-coin); }
+.stat-pill .value.rank { color: #c8a8e0; }
+
+.header-time {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--parchment-aged);
+  font-size: 12px;
+  opacity: 0.7;
+  text-align: right;
+}
+
+/* ─── NAVIGATION TABS ─── */
+.nav-tabs {
+  background: linear-gradient(to bottom, var(--wood) 0%, var(--wood-dark) 100%);
+  border-bottom: 3px solid var(--brass-dark);
+  display: flex;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 2px;
+  overflow-x: auto;
+}
+.nav-tab {
+  padding: 10px 20px;
+  font-family: 'IM Fell English', serif;
+  font-size: 13px;
+  color: var(--parchment-aged);
+  opacity: 0.6;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+.nav-tab:hover { opacity: 0.9; color: var(--brass-light); }
+.nav-tab.active {
+  opacity: 1;
+  color: var(--brass-light);
+  border-bottom: 3px solid var(--brass);
+  background: rgba(181,137,42,0.1);
+}
+.nav-tab .tab-icon { font-size: 15px; }
+
+/* ─── MAIN CONTENT AREA ─── */
+.main-content {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* ─── PARCHMENT PANEL ─── */
+.panel {
+  background: linear-gradient(135deg, var(--vellum) 0%, var(--parchment) 50%, var(--parchment-dark) 100%);
+  border: 2px solid var(--parchment-aged);
+  border-radius: 4px;
+  box-shadow:
+    0 4px 20px var(--shadow),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+.panel::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+}
+.panel-header {
+  background: linear-gradient(to right, var(--wood-dark) 0%, var(--wood) 100%);
+  padding: 10px 16px;
+  border-bottom: 2px solid var(--brass-dark);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px;
+}
+.panel-title {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 16px;
+  color: var(--brass-light);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  display: flex; align-items: center; gap: 8px;
+}
+.panel-body { padding: 16px; position: relative; }
+
+/* ─── TABS PANEL ─── */
+.panel-tabs {
+  display: none;
+}
+.panel-tabs.active {
+  display: block;
+}
+
+/* ─── ORNAMENTAL DIVIDER ─── */
+.ornament {
+  text-align: center;
+  color: var(--brass-dark);
+  font-size: 14px;
+  letter-spacing: 8px;
+  margin: 8px 0;
+  opacity: 0.6;
+}
+
+/* ─── NEWS TICKER ─── */
+.news-bar {
+  background: linear-gradient(to right, var(--wood-dark), var(--wood), var(--wood-dark));
+  border: 1px solid var(--brass-dark);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  height: 36px;
+}
+.news-label {
+  background: var(--wax-red);
+  color: var(--parchment);
+  font-family: 'IM Fell English', serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 0 12px;
+  height: 100%;
+  display: flex; align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-right: 2px solid var(--brass-dark);
+}
+.news-scroll-wrapper { overflow: hidden; flex: 1; height: 100%; }
+.news-scroll {
+  display: flex;
+  animation: newsScroll 60s linear infinite;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+}
+.news-item {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--parchment-aged);
+  padding: 0 40px;
+  display: flex; align-items: center; gap: 8px;
+}
+.news-item::before { content: '⚜'; color: var(--brass); font-style: normal; }
+@keyframes newsScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── DASHBOARD GRID ─── */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.dash-card {
+  background: linear-gradient(135deg, var(--vellum) 0%, var(--parchment) 100%);
+  border: 1px solid var(--parchment-aged);
+  border-radius: 3px;
+  padding: 14px;
+  box-shadow: 0 2px 8px var(--shadow);
+  position: relative;
+}
+.dash-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--brass-dark), var(--brass-light), var(--brass-dark));
+}
+.dash-card-label {
+  font-family: 'IM Fell English', serif;
+  font-size: 11px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  opacity: 0.8;
+}
+.dash-card-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 4px;
+}
+.dash-card-value.gold { color: var(--brass-dark); }
+.dash-card-delta {
+  font-family: 'Crimson Text', serif;
+  font-size: 12px;
+  margin-top: 2px;
+}
+.delta-up { color: var(--price-up); }
+.delta-down { color: var(--price-down); }
+
+/* ─── MARKET TABLE ─── */
+.market-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+}
+.market-table thead tr {
+  background: linear-gradient(to right, var(--wood-dark), var(--wood));
+  color: var(--brass-light);
+}
+.market-table th {
+  font-family: 'IM Fell English', serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--brass-dark);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.market-table th:hover { color: var(--parchment); }
+.market-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(139,94,60,0.2);
+}
+.market-table tbody tr {
+  transition: background 0.15s;
+}
+.market-table tbody tr:hover {
+  background: rgba(181,137,42,0.08);
+}
+.market-table tbody tr:nth-child(even) {
+  background: rgba(0,0,0,0.03);
+}
+.market-table tbody tr:nth-child(even):hover {
+  background: rgba(181,137,42,0.08);
+}
+
+.price-up   { color: var(--price-up);   font-weight: 600; }
+.price-down { color: var(--price-down); font-weight: 600; }
+.price-flat { color: var(--ink-light); }
+
+.spark-cell { width: 80px; }
+.sparkline { display: flex; align-items: flex-end; gap: 2px; height: 28px; }
+.spark-bar {
+  flex: 1;
+  background: var(--brass-dark);
+  border-radius: 1px 1px 0 0;
+  min-height: 2px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.spark-bar:last-child { opacity: 1; background: var(--brass); }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'IM Fell English', serif;
+  font-size: 13px;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+}
+.btn-buy {
+  background: linear-gradient(135deg, #1a5c2a, #2d8a44);
+  color: var(--parchment);
+  border: 1px solid #1a5c2a;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.btn-buy:hover { background: linear-gradient(135deg, #2d8a44, #3aad58); box-shadow: 0 3px 8px rgba(0,0,0,0.4); }
+.btn-sell {
+  background: linear-gradient(135deg, #6b1a1a, #9b2828);
+  color: var(--parchment);
+  border: 1px solid #6b1a1a;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.btn-sell:hover { background: linear-gradient(135deg, #9b2828, #c03030); box-shadow: 0 3px 8px rgba(0,0,0,0.4); }
+.btn-craft {
+  background: linear-gradient(135deg, #3a2a6b, #5a408b);
+  color: var(--parchment);
+  border: 1px solid #3a2a6b;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.btn-craft:hover { background: linear-gradient(135deg, #5a408b, #7a5aab); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--brass-dark), var(--brass));
+  color: var(--wood-dark);
+  border: 1px solid var(--brass-dark);
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.btn-primary:hover { background: linear-gradient(135deg, var(--brass), var(--brass-light)); }
+.btn-sm { padding: 4px 10px; font-size: 11px; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ─── INVENTORY GRID ─── */
+.inv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+.inv-slot {
+  background: linear-gradient(135deg, var(--parchment-dark), var(--parchment-aged));
+  border: 2px solid var(--parchment-aged);
+  border-radius: 4px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.inv-slot:hover {
+  border-color: var(--brass);
+  box-shadow: 0 2px 8px var(--shadow);
+  transform: translateY(-1px);
+}
+.inv-slot.selected {
+  border-color: var(--brass);
+  background: linear-gradient(135deg, #e8d49a, #dfc98a);
+  box-shadow: 0 0 0 2px var(--brass-light), 0 2px 8px var(--shadow);
+}
+.inv-icon { font-size: 26px; display: block; margin-bottom: 4px; }
+.inv-name {
+  font-family: 'IM Fell English', serif;
+  font-size: 11px;
+  color: var(--ink-faded);
+  display: block;
+  line-height: 1.2;
+}
+.inv-qty {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-top: 3px;
+}
+.inv-empty { opacity: 0.35; }
+
+/* ─── CRAFTING RECIPES ─── */
+.recipe-card {
+  background: linear-gradient(135deg, var(--vellum), var(--parchment));
+  border: 1px solid var(--parchment-aged);
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+.recipe-card:hover { box-shadow: 0 3px 12px var(--shadow); }
+.recipe-card.can-craft { border-color: var(--brass-dark); }
+.recipe-output { font-size: 32px; flex-shrink: 0; }
+.recipe-info { flex: 1; }
+.recipe-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.recipe-desc {
+  font-family: 'Crimson Text', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-light);
+  margin-top: 2px;
+}
+.recipe-ingredients {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+}
+.ingredient-tag {
+  background: var(--parchment-aged);
+  border: 1px solid var(--parchment-aged);
+  border-radius: 2px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: 'IM Fell English', serif;
+  color: var(--ink-faded);
+  display: flex; align-items: center; gap: 4px;
+}
+.ingredient-tag.missing { color: var(--price-down); border-color: #c0a0a0; }
+.ingredient-tag.ok { color: var(--price-up); }
+.recipe-value {
+  text-align: right;
+  flex-shrink: 0;
+}
+.recipe-gold {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brass-dark);
+}
+.recipe-gold::before { content: '⚙ '; font-size: 12px; }
+
+/* ─── TRADER LIST ─── */
+.trader-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(139,94,60,0.2);
+}
+.trader-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 2px solid var(--parchment-aged);
+}
+.trader-info { flex: 1; min-width: 0; }
+.trader-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.trader-title {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink-light);
+}
+.trader-wealth {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brass-dark);
+  text-align: right;
+}
+.trader-rank-badge {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--wood-dark);
+  flex-shrink: 0;
+}
+.rank-1 { background: linear-gradient(135deg, #d4aa4a, #f0cc6a); }
+.rank-2 { background: linear-gradient(135deg, #a0a0a0, #c0c0c0); }
+.rank-3 { background: linear-gradient(135deg, #8b5e3c, #a07050); }
+.rank-other { background: var(--parchment-aged); font-size: 9px; }
+
+/* ─── NEWS LOG ─── */
+.news-entry {
+  padding: 10px 14px;
+  border-left: 3px solid var(--brass-dark);
+  margin-bottom: 10px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 0 3px 3px 0;
+}
+.news-entry.urgent { border-left-color: var(--wax-red); }
+.news-entry.positive { border-left-color: var(--price-up); }
+.news-entry.negative { border-left-color: var(--price-down); }
+.news-entry-time {
+  font-family: 'IM Fell English', serif;
+  font-size: 10px;
+  color: var(--ink-light);
+  margin-bottom: 3px;
+  letter-spacing: 1px;
+}
+.news-entry-text {
+  font-family: 'Crimson Text', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.news-entry-effect {
+  font-family: 'IM Fell English', serif;
+  font-size: 11px;
+  color: var(--ink-light);
+  margin-top: 3px;
+}
+
+/* ─── TRADE FORM ─── */
+.trade-form {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid var(--parchment-aged);
+  border-radius: 4px;
+  padding: 16px;
+}
+.form-row {
+  display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
+}
+.form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px; }
+.form-label {
+  font-family: 'IM Fell English', serif;
+  font-size: 11px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.form-input, .form-select {
+  background: var(--vellum);
+  border: 1px solid var(--parchment-aged);
+  border-radius: 3px;
+  padding: 7px 10px;
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus { border-color: var(--brass); }
+.form-select { cursor: pointer; }
+
+/* ─── PROGRESS BARS ─── */
+.progress-track {
+  background: var(--parchment-aged);
+  border-radius: 2px;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.5s ease;
+  background: linear-gradient(to right, var(--brass-dark), var(--brass));
+}
+.progress-fill.rep { background: linear-gradient(to right, #5a408b, #7a5aab); }
+
+/* ─── PRICE CHART ─── */
+.price-chart-container {
+  position: relative;
+  height: 120px;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid var(--parchment-aged);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.price-chart-svg { width: 100%; height: 100%; }
+
+/* ─── ORDER BOOK ─── */
+.order-book {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.order-side { }
+.order-side-title {
+  font-family: 'IM Fell English', serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 10px;
+  border-radius: 3px 3px 0 0;
+  margin-bottom: 4px;
+}
+.order-side-title.buy { background: rgba(26,92,42,0.15); color: var(--price-up); }
+.order-side-title.sell { background: rgba(107,26,26,0.15); color: var(--price-down); }
+.order-row {
+  display: flex; justify-content: space-between;
+  padding: 5px 10px;
+  font-family: 'Crimson Text', serif;
+  font-size: 13px;
+  border-bottom: 1px dotted rgba(139,94,60,0.2);
+}
+.order-row .price { font-weight: 600; }
+.order-row.buy .price { color: var(--price-up); }
+.order-row.sell .price { color: var(--price-down); }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(44,26,14,0.7);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: linear-gradient(135deg, var(--vellum) 0%, var(--parchment) 100%);
+  border: 3px solid var(--brass-dark);
+  border-radius: 6px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  width: 500px;
+  max-width: 95vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: translateY(20px);
+  transition: transform 0.2s;
+  position: relative;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-header {
+  background: linear-gradient(to right, var(--wood-dark), var(--wood));
+  padding: 14px 20px;
+  border-bottom: 2px solid var(--brass-dark);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-title {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 18px;
+  color: var(--brass-light);
+}
+.modal-close {
+  background: none; border: none; color: var(--parchment-aged);
+  cursor: pointer; font-size: 20px; line-height: 1;
+  opacity: 0.7; transition: opacity 0.15s;
+}
+.modal-close:hover { opacity: 1; }
+.modal-body { padding: 20px; }
+
+/* ─── TOAST NOTIFICATIONS ─── */
+.toast-container {
+  position: fixed; bottom: 20px; right: 20px;
+  z-index: 2000;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  background: linear-gradient(135deg, var(--wood-dark), var(--wood));
+  border: 1px solid var(--brass-dark);
+  border-radius: 4px;
+  padding: 12px 18px;
+  color: var(--parchment-aged);
+  font-family: 'Crimson Text', serif;
+  font-size: 13px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  max-width: 320px;
+  animation: toastIn 0.3s ease;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.toast.success .toast-icon::before { content: '✓'; color: #4aaa64; }
+.toast.error .toast-icon::before { content: '✗'; color: #c04040; }
+.toast.info .toast-icon::before { content: '⚜'; color: var(--brass); }
+.toast.warning .toast-icon::before { content: '⚠'; color: #c0a040; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── REPUTATION METER ─── */
+.rep-ring {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(var(--brass) 0%, var(--brass) var(--pct, 50%), var(--parchment-aged) var(--pct, 50%));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px var(--shadow);
+  position: relative;
+}
+.rep-ring::before {
+  content: '';
+  position: absolute;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--parchment);
+}
+.rep-ring-inner {
+  position: relative; z-index: 1;
+  text-align: center;
+}
+.rep-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+.rep-label {
+  font-family: 'IM Fell English', serif;
+  font-size: 9px;
+  color: var(--ink-light);
+}
+
+/* ─── LAYOUT PANELS ─── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.sidebar-layout { display: grid; grid-template-columns: 300px 1fr; gap: 16px; }
+.sidebar-layout-right { display: grid; grid-template-columns: 1fr 320px; gap: 16px; }
+
+/* ─── TICKER / FLASH EFFECTS ─── */
+@keyframes flashGreen {
+  0% { background: rgba(26,92,42,0.3); }
+  100% { background: transparent; }
+}
+@keyframes flashRed {
+  0% { background: rgba(107,26,26,0.3); }
+  100% { background: transparent; }
+}
+.flash-green { animation: flashGreen 0.8s ease; }
+.flash-red { animation: flashRed 0.8s ease; }
+
+/* ─── MISC ─── */
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.text-muted  { color: var(--ink-light); font-style: italic; }
+.text-bold   { font-weight: 600; }
+.gap-8  { gap: 8px; }
+.mt-8   { margin-top: 8px; }
+.mt-12  { margin-top: 12px; }
+.mt-16  { margin-top: 16px; }
+.mb-12  { margin-bottom: 12px; }
+.flex   { display: flex; }
+.flex-center { display: flex; align-items: center; }
+.justify-between { justify-content: space-between; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: 'IM Fell English', serif;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+.badge-guild { background: rgba(90,64,139,0.2); color: #5a408b; border: 1px solid #5a408b; }
+.badge-kingdom { background: rgba(139,26,26,0.15); color: var(--wax-red); border: 1px solid var(--wax-red); }
+.badge-merchant { background: rgba(181,137,42,0.2); color: var(--brass-dark); border: 1px solid var(--brass-dark); }
+
+.tab-bar {
+  display: flex; gap: 2px;
+  border-bottom: 2px solid var(--parchment-aged);
+  margin-bottom: 14px;
+}
+.tab-btn {
+  padding: 6px 14px;
+  font-family: 'IM Fell English', serif;
+  font-size: 12px;
+  color: var(--ink-light);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+  background: none; border-top: none; border-left: none; border-right: none;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--brass-dark); border-bottom-color: var(--brass); font-weight: 600; }
+
+/* ─── SCROLL VIEW FOR LONG LISTS ─── */
+.scroll-list { max-height: 420px; overflow-y: auto; }
+.scroll-list::-webkit-scrollbar { width: 5px; }
+.scroll-list::-webkit-scrollbar-thumb { background: var(--parchment-aged); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1100px) {
+  .dash-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .sidebar-layout { grid-template-columns: 1fr; }
+  .sidebar-layout-right { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .dash-grid { grid-template-columns: repeat(2, 1fr); }
+  .three-col { grid-template-columns: 1fr 1fr; }
+  .header-inner { gap: 8px; }
+  .title-text h1 { font-size: 20px; }
+  .header-stats { gap: 8px; }
+}
+
+/* ─── LOADING SCREEN ─── */
+#loading-screen {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, var(--wood-dark), #1a0d04);
+  z-index: 10000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px;
+  transition: opacity 0.6s ease;
+}
+#loading-screen h2 {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 36px;
+  color: var(--brass-light);
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+}
+#loading-screen p {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--parchment-aged);
+  opacity: 0.7;
+}
+.loading-bar-track {
+  width: 300px; height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--brass-dark);
+}
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--brass-dark), var(--brass-light));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* ─── EXTRA FLAIR ─── */
+.coin-icon { display: inline; font-style: normal; }
+.section-rule {
+  border: none;
+  border-top: 1px solid var(--parchment-aged);
+  margin: 12px 0;
+}
+.italic { font-style: italic; }
+.small { font-size: 11px; }
+.craft-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 800px) { .craft-section { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LOADING SCREEN
+══════════════════════════════════════════════ -->
+<div id="loading-screen">
+  <div style="font-size:48px">⚜</div>
+  <h2>The Grand Merchant's Ledger</h2>
+  <p id="loading-text">Summoning merchants to the marketplace...</p>
+  <div class="loading-bar-track"><div class="loading-bar-fill" id="loading-bar"></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TOAST CONTAINER
+══════════════════════════════════════════════ -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ══════════════════════════════════════════════
+     TRADE MODAL
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="trade-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Trade</span>
+      <button class="modal-close" onclick="UI.closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="game-header">
+  <div class="header-inner">
+    <div class="header-title">
+      <div class="wax-seal">⚜</div>
+      <div class="title-text">
+        <h1>The Grand Merchant's Ledger</h1>
+        <p>Kingdom of Auvenmoor · Open Market Exchange</p>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill">
+        <span class="label">Treasury</span>
+        <span class="value gold" id="hdr-gold">100 ⚙</span>
+      </div>
+      <div class="stat-pill">
+        <span class="label">Net Worth</span>
+        <span class="value gold" id="hdr-networth">100 ⚙</span>
+      </div>
+      <div class="stat-pill">
+        <span class="label">Rank</span>
+        <span class="value rank" id="hdr-rank">#—</span>
+      </div>
+      <div class="stat-pill">
+        <span class="label">Reputation</span>
+        <span class="value" id="hdr-rep">50</span>
+      </div>
+    </div>
+    <div class="header-time">
+      <div id="game-date" style="font-size:14px;color:var(--brass-light);">Year 847, Day 1</div>
+      <div id="game-time">Season of Thaw</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════ -->
+<div style="background:linear-gradient(to bottom,var(--wood),var(--wood-dark));border-bottom:3px solid var(--brass-dark);">
+  <div class="nav-tabs" id="nav-tabs">
+    <div class="nav-tab active" data-tab="market">
+      <span class="tab-icon">🏪</span> Market
+    </div>
+    <div class="nav-tab" data-tab="inventory">
+      <span class="tab-icon">🎒</span> Inventory
+    </div>
+    <div class="nav-tab" data-tab="crafting">
+      <span class="tab-icon">⚒</span> Crafting
+    </div>
+    <div class="nav-tab" data-tab="orders">
+      <span class="tab-icon">📜</span> Orders
+    </div>
+    <div class="nav-tab" data-tab="traders">
+      <span class="tab-icon">👥</span> Traders
+    </div>
+    <div class="nav-tab" data-tab="news">
+      <span class="tab-icon">📰</span> Herald
+    </div>
+    <div class="nav-tab" data-tab="overview">
+      <span class="tab-icon">🗺</span> Overview
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════════ -->
+<div class="main-content">
+
+  <!-- ── NEWS TICKER ── -->
+  <div class="news-bar">
+    <div class="news-label">⚜ Heralding</div>
+    <div class="news-scroll-wrapper">
+      <div class="news-scroll" id="news-ticker"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ MARKET TAB ══════════ -->
+  <div class="panel-tabs active" id="tab-market">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">🏪 The Open Market Exchange</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select class="form-select" id="market-filter" style="padding:4px 8px;font-size:12px;">
+            <option value="all">All Goods</option>
+            <option value="resources">Resources</option>
+            <option value="crafted">Crafted Goods</option>
+          </select>
+          <span style="font-family:'IM Fell English',serif;font-size:11px;color:var(--parchment-aged);opacity:0.7;" id="market-active-traders">— traders active</span>
+        </div>
+      </div>
+      <div class="panel-body">
+        <table class="market-table" id="market-table">
+          <thead>
+            <tr>
+              <th style="width:30px">#</th>
+              <th>Commodity</th>
+              <th>Current Price</th>
+              <th>Change</th>
+              <th>Supply</th>
+              <th>Demand</th>
+              <th>Volume (24h)</th>
+              <th class="spark-cell">Price History</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="market-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ INVENTORY TAB ══════════ -->
+  <div class="panel-tabs" id="tab-inventory">
+    <div class="sidebar-layout">
+      <div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">🎒 Your Inventory</div>
+            <span style="font-family:'IM Fell English',serif;font-size:11px;color:var(--parchment-aged);" id="inv-count">0 / 200 slots</span>
+          </div>
+          <div class="panel-body">
+            <div class="inv-grid" id="inv-grid"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">📊 Your Ledger</div></div>
+          <div class="panel-body" id="ledger-stats"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">🎖 Reputation</div></div>
+          <div class="panel-body" id="rep-panel"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">🏗 Upgrades</div></div>
+          <div class="panel-body" id="upgrades-panel"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ CRAFTING TAB ══════════ -->
+  <div class="panel-tabs" id="tab-crafting">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">⚒ The Crafting Workshop</div>
+        <span style="font-family:'IM Fell English',serif;font-size:11px;color:var(--parchment-aged);" id="craft-unlock-info">Unlock workshops to craft more goods</span>
+      </div>
+      <div class="panel-body">
+        <div class="craft-section" id="crafting-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ ORDERS TAB ══════════ -->
+  <div class="panel-tabs" id="tab-orders">
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📜 Your Active Orders</div></div>
+        <div class="panel-body">
+          <div id="active-orders-list"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📖 Order Book</div></div>
+        <div class="panel-body">
+          <div style="margin-bottom:10px;">
+            <select class="form-select" id="orderbook-item" style="width:100%;"></select>
+          </div>
+          <div class="order-book" id="order-book-display"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:16px;">
+      <div class="panel-header"><div class="panel-title">📋 Trade History</div></div>
+      <div class="panel-body">
+        <div class="scroll-list" id="trade-history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TRADERS TAB ══════════ -->
+  <div class="panel-tabs" id="tab-traders">
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">🏆 Wealth Leaderboard</div></div>
+        <div class="panel-body">
+          <div class="scroll-list" id="leaderboard-list"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">🏛 Active Guilds & Factions</div></div>
+        <div class="panel-body">
+          <div class="scroll-list" id="guild-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ NEWS/HERALD TAB ══════════ -->
+  <div class="panel-tabs" id="tab-news">
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📰 The Kingdom Herald</div></div>
+        <div class="panel-body">
+          <div class="scroll-list" id="news-log"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">📈 Price Charts</div></div>
+        <div class="panel-body" id="price-charts-panel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ OVERVIEW TAB ══════════ -->
+  <div class="panel-tabs" id="tab-overview">
+    <div class="dash-grid" id="overview-cards" style="margin-bottom:16px;"></div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">🗺 Economic Overview</div></div>
+        <div class="panel-body" id="economy-overview"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">💾 Save & Load</div></div>
+        <div class="panel-body" id="save-panel"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main-content -->
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT ENGINE
+══════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ============================================================
+   ECONOMY.JS — Core economic data, prices, supply/demand
+   ============================================================ */
+const Economy = (() => {
+
+  // ── RESOURCE DEFINITIONS ──
+  const RESOURCES = {
+    wood:    { name:'Wood',    icon:'🪵', basePrice:8,  category:'resource', desc:'Timber from the great forests' },
+    stone:   { name:'Stone',   icon:'🪨', basePrice:10, category:'resource', desc:'Quarried from the mountain passes' },
+    iron:    { name:'Iron',    icon:'⚙',  basePrice:18, category:'resource', desc:'Smelted iron ore from northern mines' },
+    coal:    { name:'Coal',    icon:'🖤', basePrice:12, category:'resource', desc:'Black fuel from deep shafts' },
+    leather: { name:'Leather', icon:'🟫', basePrice:14, category:'resource', desc:'Tanned hides from the southern ranches' },
+    herbs:   { name:'Herbs',   icon:'🌿', basePrice:9,  category:'resource', desc:'Medicinal plants from forest glades' },
+    wheat:   { name:'Wheat',   icon:'🌾', basePrice:6,  category:'resource', desc:'Golden grain from the river valleys' },
+    fish:    { name:'Fish',    icon:'🐟', basePrice:7,  category:'resource', desc:'Fresh catch from the coastal waters' },
+    silver:  { name:'Silver',  icon:'🔘', basePrice:35, category:'resource', desc:'Rare silver from the deep veins' },
+    gold:    { name:'Gold',    icon:'🟡', basePrice:80, category:'resource', desc:'Precious gold, the backbone of trade' },
+  };
+
+  // ── CRAFTED GOODS DEFINITIONS ──
+  const CRAFTED = {
+    weapons:   { name:'Weapons',   icon:'⚔',  basePrice:65, category:'crafted', desc:'Swords and blades forged by the smiths' },
+    armor:     { name:'Armor',     icon:'🛡',  basePrice:90, category:'crafted', desc:'Protective plate and chainmail' },
+    bread:     { name:'Bread',     icon:'🍞', basePrice:12, category:'crafted', desc:'Loaves baked fresh at the bakehouse' },
+    potions:   { name:'Potions',   icon:'⚗',  basePrice:45, category:'crafted', desc:'Alchemical brews of great potency' },
+    furniture: { name:'Furniture', icon:'🪑', basePrice:40, category:'crafted', desc:'Fine chairs and tables for noble halls' },
+    tools:     { name:'Tools',     icon:'🔨', basePrice:30, category:'crafted', desc:'Hammers, picks, and ploughshares' },
+    jewelry:   { name:'Jewelry',   icon:'💍', basePrice:120,category:'crafted', desc:'Rings and pendants of silver and gold' },
+  };
+
+  const ALL_ITEMS = { ...RESOURCES, ...CRAFTED };
+
+  // ── MARKET STATE ──
+  // Prices, supply, demand tracked per item
+  const market = {};
+  const PRICE_HISTORY_LEN = 20;
+
+  // ── INITIALIZE MARKET ──
+  function init() {
+    for (const [key, item] of Object.entries(ALL_ITEMS)) {
+      const spread = item.basePrice * 0.15;
+      const startPrice = item.basePrice + (Math.random() - 0.5) * spread;
+      market[key] = {
+        price: startPrice,
+        basePrice: item.basePrice,
+        supply: 500 + Math.random() * 500,
+        demand: 400 + Math.random() * 400,
+        volume: 0,
+        dailyVolume: 0,
+        history: Array.from({length: PRICE_HISTORY_LEN}, () =>
+          startPrice * (0.85 + Math.random() * 0.3)
+        ),
+        buyOrders: [],
+        sellOrders: [],
+        lastChange: 0,
+      };
+    }
+  }
+
+  // ── PRICE CALCULATION ──
+  // Price rises with demand, falls with supply — with volatility
+  function recalcPrice(key) {
+    const m = market[key];
+    const item = ALL_ITEMS[key];
+    const ratio = m.demand / Math.max(m.supply, 1);
+    // Soft cap: price won't fly too far from base
+    const targetPrice = item.basePrice * Math.pow(ratio, 0.7);
+    // Apply elasticity
+    const elasticity = 0.08; // how fast price moves toward target
+    const noise = 1 + (Math.random() - 0.5) * 0.03;
+    const oldPrice = m.price;
+    m.price = m.price * (1 - elasticity) + targetPrice * elasticity * noise;
+    m.price = Math.max(item.basePrice * 0.2, Math.min(item.basePrice * 5, m.price));
+    m.lastChange = m.price - oldPrice;
+    // Push to history
+    m.history.push(m.price);
+    if (m.history.length > PRICE_HISTORY_LEN) m.history.shift();
+    // Natural supply/demand decay toward equilibrium
+    m.supply += (700 - m.supply) * 0.02;
+    m.demand += (500 - m.demand) * 0.02;
+    // Reset daily volume periodically
+    m.dailyVolume = m.volume;
+    m.volume = 0;
+  }
+
+  function tick() {
+    for (const key of Object.keys(ALL_ITEMS)) {
+      recalcPrice(key);
+    }
+  }
+
+  function buyFromMarket(key, qty) {
+    const m = market[key];
+    const cost = m.price * qty;
+    m.supply -= qty;
+    m.demand += qty * 0.3;
+    m.volume += qty;
+    return cost;
+  }
+
+  function sellToMarket(key, qty) {
+    const m = market[key];
+    const revenue = m.price * qty;
+    m.supply += qty;
+    m.demand -= qty * 0.3;
+    m.volume += qty;
+    return revenue;
+  }
+
+  function shockMarket(key, supplyDelta, demandDelta) {
+    const m = market[key];
+    m.supply = Math.max(10, m.supply + supplyDelta);
+    m.demand = Math.max(10, m.demand + demandDelta);
+  }
+
+  return { RESOURCES, CRAFTED, ALL_ITEMS, market, init, tick,
+           buyFromMarket, sellToMarket, shockMarket };
+})();
+
+/* ============================================================
+   CRAFTING.JS — Recipes, crafting logic
+   ============================================================ */
+const Crafting = (() => {
+
+  // ── RECIPES ──
+  const RECIPES = {
+    weapons: {
+      output: 'weapons', qty: 1,
+      inputs: { iron: 3, coal: 1, wood: 1 },
+      time: 3,
+      workshop: 'smithy',
+      desc: 'Forged blades for warriors and guards',
+    },
+    armor: {
+      output: 'armor', qty: 1,
+      inputs: { iron: 5, leather: 2, coal: 2 },
+      time: 4,
+      workshop: 'smithy',
+      desc: 'Hammered plate to turn aside steel',
+    },
+    bread: {
+      output: 'bread', qty: 3,
+      inputs: { wheat: 4, coal: 1 },
+      time: 1,
+      workshop: 'bakehouse',
+      desc: 'Wholesome loaves, sustenance for all',
+    },
+    potions: {
+      output: 'potions', qty: 2,
+      inputs: { herbs: 3, fish: 1, silver: 1 },
+      time: 2,
+      workshop: 'alchemist',
+      desc: 'Distilled brews of remarkable potency',
+    },
+    furniture: {
+      output: 'furniture', qty: 1,
+      inputs: { wood: 6, iron: 1, leather: 1 },
+      time: 3,
+      workshop: 'workshop',
+      desc: 'Hewn and jointed for noble households',
+    },
+    tools: {
+      output: 'tools', qty: 2,
+      inputs: { iron: 2, wood: 2, coal: 1 },
+      time: 2,
+      workshop: 'smithy',
+      desc: 'Stout implements of trade and toil',
+    },
+    jewelry: {
+      output: 'jewelry', qty: 1,
+      inputs: { gold: 1, silver: 2, gems: 0 },
+      time: 3,
+      workshop: 'jeweler',
+      desc: 'Glittering adornments for wealthy patrons',
+    },
+  };
+
+  // Fix jewelry recipe — remove gems requirement (not a basic resource)
+  RECIPES.jewelry.inputs = { gold: 1, silver: 3 };
+
+  // Attempt to craft a recipe
+  function craft(recipeKey, player) {
+    const recipe = RECIPES[recipeKey];
+    if (!recipe) return { ok: false, msg: 'Unknown recipe.' };
+
+    // Check workshop
+    const workshop = recipe.workshop;
+    if (workshop !== 'none' && !player.upgrades.includes(workshop)) {
+      return { ok: false, msg: `Requires a ${workshop}.` };
+    }
+
+    // Check ingredients
+    for (const [item, qty] of Object.entries(recipe.inputs)) {
+      if ((player.inventory[item] || 0) < qty) {
+        return { ok: false, msg: `Insufficient ${Economy.ALL_ITEMS[item]?.name || item}` };
+      }
+    }
+
+    // Deduct ingredients
+    for (const [item, qty] of Object.entries(recipe.inputs)) {
+      player.inventory[item] = (player.inventory[item] || 0) - qty;
+    }
+
+    // Add output
+    const outputItem = recipe.output;
+    player.inventory[outputItem] = (player.inventory[outputItem] || 0) + recipe.qty;
+    player.craftCount = (player.craftCount || 0) + 1;
+
+    return { ok: true, qty: recipe.qty, item: outputItem };
+  }
+
+  function canCraft(recipeKey, player) {
+    const recipe = RECIPES[recipeKey];
+    if (!recipe) return false;
+    if (recipe.workshop !== 'none' && !player.upgrades.includes(recipe.workshop)) return false;
+    for (const [item, qty] of Object.entries(recipe.inputs)) {
+      if ((player.inventory[item] || 0) < qty) return false;
+    }
+    return true;
+  }
+
+  return { RECIPES, craft, canCraft };
+})();
+
+/* ============================================================
+   AI_TRADERS.JS — Simulated merchant bots
+   ============================================================ */
+const AITraders = (() => {
+
+  const FIRST_NAMES = [
+    'Aldric','Brynn','Caius','Dora','Emric','Faye','Gorin','Hilda',
+    'Ivo','Joss','Kern','Lyra','Moran','Niobe','Oswin','Petra',
+    'Quill','Renn','Sable','Thea','Urgo','Voss','Wren','Xandra',
+    'Yoric','Zara','Brom','Clea','Dex','Elya','Fenn','Gail',
+    'Hob','Isra','Jak','Kess','Lor','Mira','Nev','Ora',
+  ];
+  const LAST_NAMES = [
+    'Ashwood','Blackthorn','Coppersmithe','Dunn','Embervale',
+    'Fordgate','Goldweave','Hartley','Ironside','Jarret',
+    'Knappe','Longbridge','Mercer','Northgate','Oakhurst',
+    'Pinewood','Quarrel','Reedmore','Silverton','Thornwall',
+    'Underhill','Vaultmore','Whetstone','Yarrow','Zengate',
+  ];
+  const PROFESSIONS = [
+    'Merchant','Blacksmith','Alchemist','Baker','Caravan Master',
+    'Jeweler','Farmer','Fisher','Miner','Woodcutter',
+    'Arms Dealer','Spice Trader','Cloth Merchant','Herbalist',
+    'Guild Broker','Kingdom Supplier','Harbor Master','Market Speculator',
+  ];
+  const PROFESSION_ICONS = {
+    'Merchant':'🧑‍💼','Blacksmith':'⚒','Alchemist':'⚗','Baker':'🍞',
+    'Caravan Master':'🐪','Jeweler':'💍','Farmer':'👨‍🌾','Fisher':'🎣',
+    'Miner':'⛏','Woodcutter':'🪓','Arms Dealer':'⚔','Spice Trader':'🌶',
+    'Cloth Merchant':'🧵','Herbalist':'🌿','Guild Broker':'📜',
+    'Kingdom Supplier':'🏰','Harbor Master':'⚓','Market Speculator':'📈',
+  };
+  const COLORS = [
+    '#8b1a1a','#1a5c2a','#1a2a6b','#6b4a1a','#5a408b',
+    '#2a5c5c','#6b1a5a','#3a5c1a','#6b3a1a','#1a4a6b',
+  ];
+
+  // ── GUILD DEFINITIONS ──
+  const GUILDS = [
+    { name:'Ironkeep Brotherhood',   focus:['iron','coal','weapons','tools'],   color:'#6b2020', icon:'⚒', wealth: 50000 },
+    { name:'Silvertongue Merchants', focus:['silver','gold','jewelry'],          color:'#5a408b', icon:'💍', wealth: 80000 },
+    { name:'Greenleaf Consortium',   focus:['herbs','wheat','bread','potions'],  color:'#2a6b2a', icon:'🌿', wealth: 40000 },
+    { name:'Saltwater League',       focus:['fish','leather','furniture'],       color:'#1a4a6b', icon:'⚓', wealth: 35000 },
+    { name:'Stonemark Cartel',       focus:['stone','wood','furniture'],         color:'#6b4a1a', icon:'🪨', wealth: 45000 },
+    { name:"Royal Provisioners",     focus:['wheat','bread','armor','weapons'],  color:'#6b1a1a', icon:'🏰', wealth: 120000 },
+  ];
+
+  let traders = [];
+  let guilds = [...GUILDS];
+
+  // ── GENERATE TRADERS ──
+  function generate(count = 200) {
+    traders = [];
+    for (let i = 0; i < count; i++) {
+      const fn = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+      const ln = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+      const prof = PROFESSIONS[Math.floor(Math.random() * PROFESSIONS.length)];
+      const guildIdx = Math.random() < 0.4 ? Math.floor(Math.random() * GUILDS.length) : -1;
+      const wealth = 500 + Math.pow(Math.random(), 2) * 20000;
+      // Focus: 1-3 items this trader prefers
+      const allKeys = Object.keys(Economy.ALL_ITEMS);
+      const focusCount = 1 + Math.floor(Math.random() * 3);
+      const focus = [];
+      for (let f = 0; f < focusCount; f++) {
+        focus.push(allKeys[Math.floor(Math.random() * allKeys.length)]);
+      }
+      // Random inventory
+      const inventory = {};
+      for (const f of focus) {
+        inventory[f] = Math.floor(Math.random() * 20);
+      }
+      traders.push({
+        id: i,
+        name: `${fn} ${ln}`,
+        profession: prof,
+        icon: PROFESSION_ICONS[prof] || '🧑',
+        color: COLORS[i % COLORS.length],
+        wealth,
+        guild: guildIdx >= 0 ? GUILDS[guildIdx].name : null,
+        focus,
+        inventory,
+        reputation: 40 + Math.random() * 60,
+        tradeCount: Math.floor(Math.random() * 200),
+        sentiment: 0.5 + (Math.random() - 0.5) * 0.4, // 0=bear, 1=bull
+      });
+    }
+    return traders;
+  }
+
+  // ── AI TICK ──
+  // Each tick, a subset of traders act
+  function tick() {
+    const activeCount = 10 + Math.floor(Math.random() * 20);
+    const active = [];
+    for (let i = 0; i < activeCount; i++) {
+      const t = traders[Math.floor(Math.random() * traders.length)];
+      active.push(t);
+      simulateTrader(t);
+    }
+    // Guild actions (less frequent)
+    if (Math.random() < 0.15) {
+      const g = guilds[Math.floor(Math.random() * guilds.length)];
+      simulateGuild(g);
+    }
+    return active;
+  }
+
+  function simulateTrader(t) {
+    // Pick a focus item
+    if (!t.focus.length) return;
+    const itemKey = t.focus[Math.floor(Math.random() * t.focus.length)];
+    const m = Economy.market[itemKey];
+    if (!m) return;
+
+    const price = m.price;
+    const base = Economy.ALL_ITEMS[itemKey].basePrice;
+    const ratio = price / base;
+
+    // Decide: buy if price is low, sell if high, or opposite if speculator
+    const isBull = t.sentiment > 0.5;
+    const buyThreshold = isBull ? 1.2 : 0.85;
+    const sellThreshold = isBull ? 0.8 : 1.15;
+
+    if (ratio < buyThreshold && t.wealth > price * 5) {
+      // Buy
+      const qty = Math.min(
+        Math.floor(t.wealth * 0.1 / price),
+        5 + Math.floor(Math.random() * 10)
+      );
+      if (qty < 1) return;
+      const cost = Economy.buyFromMarket(itemKey, qty);
+      t.wealth -= cost;
+      t.inventory[itemKey] = (t.inventory[itemKey] || 0) + qty;
+      t.tradeCount++;
+    } else if (ratio > sellThreshold && (t.inventory[itemKey] || 0) > 0) {
+      // Sell
+      const qty = Math.min(
+        t.inventory[itemKey] || 0,
+        3 + Math.floor(Math.random() * 8)
+      );
+      if (qty < 1) return;
+      const rev = Economy.sellToMarket(itemKey, qty);
+      t.wealth += rev;
+      t.inventory[itemKey] = (t.inventory[itemKey] || 0) - qty;
+      t.tradeCount++;
+    }
+
+    // Occasional crafting by craftspeople
+    if (Math.random() < 0.05) {
+      simulateCraft(t);
+    }
+
+    // Sentiment drift
+    t.sentiment += (Math.random() - 0.5) * 0.05;
+    t.sentiment = Math.max(0.1, Math.min(0.9, t.sentiment));
+  }
+
+  function simulateCraft(t) {
+    const allRecipes = Object.values(Crafting.RECIPES);
+    const r = allRecipes[Math.floor(Math.random() * allRecipes.length)];
+    let canCraft = true;
+    for (const [item, qty] of Object.entries(r.inputs)) {
+      if ((t.inventory[item] || 0) < qty) { canCraft = false; break; }
+    }
+    if (canCraft) {
+      for (const [item, qty] of Object.entries(r.inputs)) {
+        t.inventory[item] -= qty;
+      }
+      t.inventory[r.output] = (t.inventory[r.output] || 0) + r.qty;
+      // Sell craft output
+      const price = Economy.market[r.output]?.price || Economy.ALL_ITEMS[r.output]?.basePrice || 10;
+      Economy.sellToMarket(r.output, r.qty);
+      t.wealth += price * r.qty * 0.9;
+    }
+  }
+
+  function simulateGuild(g) {
+    // Guilds make large concentrated purchases/sales
+    const item = g.focus[Math.floor(Math.random() * g.focus.length)];
+    const m = Economy.market[item];
+    if (!m) return;
+    const bigQty = 30 + Math.floor(Math.random() * 50);
+    if (Math.random() < 0.5 && g.wealth > m.price * bigQty) {
+      Economy.buyFromMarket(item, bigQty);
+      g.wealth -= m.price * bigQty;
+    } else {
+      Economy.sellToMarket(item, bigQty * 0.5);
+      g.wealth += m.price * bigQty * 0.5;
+    }
+    g.wealth = Math.max(5000, g.wealth);
+  }
+
+  function getLeaderboard() {
+    return [...traders].sort((a, b) => b.wealth - a.wealth).slice(0, 30);
+  }
+
+  function getGuilds() { return guilds; }
+  function getTraders() { return traders; }
+
+  return { generate, tick, getLeaderboard, getGuilds, getTraders, GUILDS };
+})();
+
+/* ============================================================
+   MARKET.JS — Player trade orders, order book
+   ============================================================ */
+const Market = (() => {
+
+  let playerOrders = [];   // { id, type:'buy'|'sell', item, qty, price, created, status }
+  let tradeHistory = [];   // { time, type, item, qty, price, total }
+  let nextOrderId = 1;
+
+  function placeBuyOrder(item, qty, limitPrice, player) {
+    const cost = limitPrice * qty;
+    if (player.gold < cost) return { ok: false, msg: 'Insufficient gold.' };
+    // Immediate fill if market price <= limit
+    const marketPrice = Economy.market[item]?.price;
+    if (marketPrice && marketPrice <= limitPrice) {
+      const actual = Economy.buyFromMarket(item, qty);
+      player.gold -= actual;
+      player.inventory[item] = (player.inventory[item] || 0) + qty;
+      player.tradeCount = (player.tradeCount || 0) + 1;
+      const rec = { time: GameState.timeStr(), type:'buy', item, qty, price: actual/qty, total: actual };
+      tradeHistory.unshift(rec);
+      if (tradeHistory.length > 100) tradeHistory.pop();
+      return { ok: true, filled: true, cost: actual };
+    }
+    // Place as pending order
+    player.gold -= cost; // hold funds
+    const order = { id: nextOrderId++, type:'buy', item, qty, price: limitPrice,
+                    created: GameState.timeStr(), status:'open' };
+    playerOrders.push(order);
+    return { ok: true, filled: false, orderId: order.id };
+  }
+
+  function placeSellOrder(item, qty, limitPrice, player) {
+    if ((player.inventory[item] || 0) < qty)
+      return { ok: false, msg: 'Insufficient inventory.' };
+    const marketPrice = Economy.market[item]?.price;
+    if (marketPrice && marketPrice >= limitPrice) {
+      const actual = Economy.sellToMarket(item, qty);
+      player.gold += actual;
+      player.inventory[item] -= qty;
+      player.tradeCount = (player.tradeCount || 0) + 1;
+      const rec = { time: GameState.timeStr(), type:'sell', item, qty, price: actual/qty, total: actual };
+      tradeHistory.unshift(rec);
+      if (tradeHistory.length > 100) tradeHistory.pop();
+      return { ok: true, filled: true, revenue: actual };
+    }
+    // Hold inventory
+    player.inventory[item] -= qty;
+    const order = { id: nextOrderId++, type:'sell', item, qty, price: limitPrice,
+                    created: GameState.timeStr(), status:'open' };
+    playerOrders.push(order);
+    return { ok: true, filled: false, orderId: order.id };
+  }
+
+  // Check pending orders on each tick
+  function processPendingOrders(player) {
+    for (const order of playerOrders) {
+      if (order.status !== 'open') continue;
+      const mp = Economy.market[order.item]?.price;
+      if (!mp) continue;
+      if (order.type === 'buy' && mp <= order.price) {
+        const actual = Economy.buyFromMarket(order.item, order.qty);
+        player.gold += (order.price - mp) * order.qty; // refund difference
+        player.gold -= actual;
+        player.inventory[order.item] = (player.inventory[order.item] || 0) + order.qty;
+        order.status = 'filled';
+        tradeHistory.unshift({ time: GameState.timeStr(), type:'buy', item:order.item,
+                                qty:order.qty, price:mp, total:actual });
+        UI.toast(`Buy order filled: ${order.qty}x ${Economy.ALL_ITEMS[order.item]?.name}`, 'success');
+      } else if (order.type === 'sell' && mp >= order.price) {
+        const actual = Economy.sellToMarket(order.item, order.qty);
+        player.gold += actual;
+        order.status = 'filled';
+        tradeHistory.unshift({ time: GameState.timeStr(), type:'sell', item:order.item,
+                                qty:order.qty, price:mp, total:actual });
+        UI.toast(`Sell order filled: ${order.qty}x ${Economy.ALL_ITEMS[order.item]?.name}`, 'success');
+      }
+    }
+    // Clean old filled orders (keep last 20 filled)
+    const filled = playerOrders.filter(o => o.status === 'filled');
+    if (filled.length > 20) {
+      playerOrders = playerOrders.filter(o => o.status === 'open' || filled.indexOf(o) >= filled.length - 20);
+    }
+  }
+
+  function cancelOrder(orderId, player) {
+    const order = playerOrders.find(o => o.id === orderId && o.status === 'open');
+    if (!order) return { ok: false, msg: 'Order not found.' };
+    order.status = 'cancelled';
+    if (order.type === 'buy') {
+      player.gold += order.price * order.qty; // refund
+    } else {
+      player.inventory[order.item] = (player.inventory[order.item] || 0) + order.qty;
+    }
+    return { ok: true };
+  }
+
+  // Build an order book simulation from AI activity
+  function getOrderBook(itemKey) {
+    const mp = Economy.market[itemKey]?.price || 10;
+    const buys = [], sells = [];
+    // Generate synthetic order book around market price
+    for (let i = 0; i < 6; i++) {
+      const priceDelta = (i + 1) * mp * 0.02;
+      buys.push({ price: mp - priceDelta, qty: 5 + Math.floor(Math.random() * 30) });
+      sells.push({ price: mp + priceDelta, qty: 5 + Math.floor(Math.random() * 30) });
+    }
+    buys.sort((a,b) => b.price - a.price);
+    sells.sort((a,b) => a.price - b.price);
+    return { buys, sells };
+  }
+
+  function getOrders() { return playerOrders; }
+  function getHistory() { return tradeHistory; }
+
+  return { placeBuyOrder, placeSellOrder, processPendingOrders,
+           cancelOrder, getOrderBook, getOrders, getHistory };
+})();
+
+/* ============================================================
+   NEWS.JS — Economic news generator
+   ============================================================ */
+const News = (() => {
+
+  const newsLog = [];
+  let tickCount = 0;
+
+  const TEMPLATES = [
+    // Supply shocks
+    { tmpl: 'Northern mines report record {item} output this season.',
+      effect: (item) => Economy.shockMarket(item, +150, 0),
+      items: ['iron','coal','silver','gold','stone'], type:'positive', intensity:'low' },
+    { tmpl: 'Floods devastate {item} harvests along the River Emmer.',
+      effect: (item) => Economy.shockMarket(item, -120, +60),
+      items: ['wheat','herbs'], type:'negative', intensity:'medium' },
+    { tmpl: 'Plague of locusts destroys {item} crops in the south.',
+      effect: (item) => Economy.shockMarket(item, -200, +100),
+      items: ['wheat','herbs'], type:'negative', intensity:'high' },
+    { tmpl: 'Great forest of Thornwood opened for logging, {item} prices expected to fall.',
+      effect: (item) => Economy.shockMarket(item, +200, 0),
+      items: ['wood'], type:'negative', intensity:'medium' },
+    { tmpl: 'Deep-water fishing ban lifted; {item} floods the coastal markets.',
+      effect: (item) => Economy.shockMarket(item, +180, 0),
+      items: ['fish'], type:'negative', intensity:'low' },
+    // Demand shocks
+    { tmpl: 'Royal army commissions five hundred {item} for the eastern campaign.',
+      effect: (item) => Economy.shockMarket(item, -30, +200),
+      items: ['weapons','armor','bread'], type:'urgent', intensity:'high' },
+    { tmpl: 'Grand Tournament announced — {item} demand surges across the kingdom.',
+      effect: (item) => Economy.shockMarket(item, 0, +150),
+      items: ['weapons','armor','jewelry'], type:'positive', intensity:'medium' },
+    { tmpl: 'Noble wedding celebrations drive up demand for {item}.',
+      effect: (item) => Economy.shockMarket(item, 0, +80),
+      items: ['jewelry','furniture','bread','potions'], type:'positive', intensity:'low' },
+    { tmpl: 'Merchant Guild purchases entire {item} reserve from the northern warehouses.',
+      effect: (item) => Economy.shockMarket(item, -300, +50),
+      items: ['wheat','iron','coal','wood','leather'], type:'urgent', intensity:'high' },
+    { tmpl: 'Healers of the White Order seek large quantities of {item} for winter stores.',
+      effect: (item) => Economy.shockMarket(item, 0, +120),
+      items: ['herbs','potions'], type:'positive', intensity:'medium' },
+    // Market news
+    { tmpl: 'Tax collectors raise levy on {item} trade — prices reflect the burden.',
+      effect: (item) => Economy.shockMarket(item, -50, 0),
+      items: Object.keys(Economy.ALL_ITEMS), type:'negative', intensity:'low' },
+    { tmpl: 'New trade route to the Eastern Kingdoms opens, {item} prices stabilise.',
+      effect: (item) => Economy.shockMarket(item, +80, 0),
+      items: ['silver','gold','jewelry','potions'], type:'positive', intensity:'low' },
+    { tmpl: 'Ironkeep Brotherhood corners the {item} market — brace for shortages.',
+      effect: (item) => Economy.shockMarket(item, -200, +100),
+      items: ['iron','weapons','tools'], type:'urgent', intensity:'high' },
+    { tmpl: 'Caravan of one hundred wagons arrives from Kestmark bearing abundant {item}.',
+      effect: (item) => Economy.shockMarket(item, +250, 0),
+      items: ['leather','herbs','wheat','fish','stone'], type:'positive', intensity:'medium' },
+    { tmpl: 'King Aldenmoor decrees {item} price controls — the market tightens.',
+      effect: (item) => Economy.shockMarket(item, 0, +60),
+      items: ['bread','weapons','tools'], type:'urgent', intensity:'medium' },
+  ];
+
+  function generate() {
+    const t = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
+    const items = t.items;
+    const item = items[Math.floor(Math.random() * items.length)];
+    const itemName = Economy.ALL_ITEMS[item]?.name || item;
+    const text = t.tmpl.replace('{item}', itemName);
+    t.effect(item);
+    const entry = {
+      time: GameState.timeStr(),
+      text,
+      type: t.type,
+      item,
+      intensity: t.intensity,
+    };
+    newsLog.unshift(entry);
+    if (newsLog.length > 80) newsLog.pop();
+    return entry;
+  }
+
+  function tick() {
+    tickCount++;
+    // News fires every ~10 ticks, with some randomness
+    if (tickCount % 10 === 0 || (tickCount % 3 === 0 && Math.random() < 0.12)) {
+      return generate();
+    }
+    return null;
+  }
+
+  function getLog() { return newsLog; }
+
+  return { tick, getLog };
+})();
+
+/* ============================================================
+   GAME STATE — Player data, progression
+   ============================================================ */
+const GameState = (() => {
+
+  let state = {};
+  let day = 1;
+  let year = 847;
+  const SEASONS = ['Season of Thaw','Season of Bloom','Season of Harvest','Season of Frost'];
+  let seasonIdx = 0;
+  let totalTicks = 0;
+
+  const UPGRADES = {
+    cart:      { name:'Market Cart',    cost: 0,    icon:'🛒', desc:'Start with a humble cart. Carry up to 200 items.', unlocks:['none'] },
+    smithy:    { name:'Smithy',         cost: 800,  icon:'⚒', desc:'Forge weapons, armor, and tools.', unlocks:['weapons','armor','tools'] },
+    bakehouse: { name:'Bakehouse',      cost: 400,  icon:'🍞', desc:'Bake bread from wheat.', unlocks:['bread'] },
+    alchemist: { name:'Alchemist Lab',  cost: 1200, icon:'⚗', desc:'Brew potions from herbs and silver.', unlocks:['potions'] },
+    workshop:  { name:'Carpenter Workshop', cost:600, icon:'🪑', desc:'Craft fine furniture.', unlocks:['furniture'] },
+    jeweler:   { name:'Jeweler Shop',   cost: 2000, icon:'💍', desc:'Fashion jewelry from gold and silver.', unlocks:['jewelry'] },
+    warehouse: { name:'Warehouse',      cost: 3000, icon:'🏚', desc:'Increase carry capacity to 1000.', unlocks:[] },
+    fleet:     { name:'Trade Fleet',    cost: 8000, icon:'⛵', desc:'Carry goods between distant ports. Passive income.', unlocks:[] },
+    guild:     { name:'Merchant Guild', cost: 20000, icon:'🏛', desc:'Found your own guild. Market influence doubled.', unlocks:[] },
+  };
+
+  function init() {
+    state = {
+      gold: 100,
+      inventory: {},
+      upgrades: ['cart'],
+      reputation: 50,
+      tradeCount: 0,
+      craftCount: 0,
+      totalProfit: 0,
+      netWorth: 100,
+    };
+  }
+
+  function load(saved) {
+    if (saved) {
+      state = saved.state || state;
+      day = saved.day || day;
+      year = saved.year || year;
+      seasonIdx = saved.seasonIdx || seasonIdx;
+      totalTicks = saved.totalTicks || totalTicks;
+    }
+  }
+
+  function save() {
+    return { state, day, year, seasonIdx, totalTicks };
+  }
+
+  function tick() {
+    totalTicks++;
+    day++;
+    if (day > 90) {
+      day = 1;
+      seasonIdx = (seasonIdx + 1) % 4;
+      if (seasonIdx === 0) year++;
+    }
+    // Fleet passive income
+    if (state.upgrades.includes('fleet')) {
+      state.gold += 12 + Math.random() * 18;
+    }
+    // Recalculate net worth
+    let invValue = 0;
+    for (const [key, qty] of Object.entries(state.inventory)) {
+      invValue += (Economy.market[key]?.price || 0) * qty;
+    }
+    state.netWorth = state.gold + invValue;
+    state.reputation = Math.max(0, Math.min(100, state.reputation));
+  }
+
+  function timeStr() {
+    return `Year ${year}, Day ${day}`;
+  }
+
+  function seasonStr() { return SEASONS[seasonIdx]; }
+
+  function canBuyUpgrade(key) {
+    return !state.upgrades.includes(key) && state.gold >= UPGRADES[key].cost;
+  }
+
+  function buyUpgrade(key) {
+    if (!canBuyUpgrade(key)) return false;
+    state.gold -= UPGRADES[key].cost;
+    state.upgrades.push(key);
+    return true;
+  }
+
+  function getCarryCapacity() {
+    if (state.upgrades.includes('warehouse')) return 1000;
+    return 200;
+  }
+
+  function getInventoryCount() {
+    return Object.values(state.inventory).reduce((a,b) => a + b, 0);
+  }
+
+  function getPlayerRank(traders) {
+    const nw = state.netWorth;
+    const sorted = [...traders, { wealth: nw, _isPlayer: true }]
+      .sort((a, b) => (b.wealth || b.netWorth || 0) - (a.wealth || a.netWorth || 0));
+    return sorted.findIndex(t => t._isPlayer) + 1;
+  }
+
+  return { init, load, save, tick, timeStr, seasonStr,
+           state, UPGRADES, canBuyUpgrade, buyUpgrade,
+           getCarryCapacity, getInventoryCount, getPlayerRank };
+})();
+
+/* ============================================================
+   UI.JS — Interface rendering and interactions
+   ============================================================ */
+const UI = (() => {
+
+  let currentTab = 'market';
+  let sortKey = 'name';
+  let sortDir = 1;
+  let marketFilter = 'all';
+
+  // ── TABS ──
+  function initTabs() {
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const t = tab.dataset.tab;
+        switchTab(t);
+      });
+    });
+    document.getElementById('market-filter').addEventListener('change', e => {
+      marketFilter = e.target.value;
+      renderMarket();
+    });
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === tab);
+    });
+    document.querySelectorAll('.panel-tabs').forEach(p => {
+      p.classList.toggle('active', p.id === `tab-${tab}`);
+    });
+    renderTab(tab);
+  }
+
+  function renderTab(tab) {
+    if (tab === 'market')    renderMarket();
+    if (tab === 'inventory') renderInventory();
+    if (tab === 'crafting')  renderCrafting();
+    if (tab === 'orders')    renderOrders();
+    if (tab === 'traders')   renderTraders();
+    if (tab === 'news')      renderNews();
+    if (tab === 'overview')  renderOverview();
+  }
+
+  // ── HEADER ──
+  function renderHeader() {
+    const s = GameState.state;
+    document.getElementById('hdr-gold').textContent = `${fmt(s.gold)} ⚙`;
+    document.getElementById('hdr-networth').textContent = `${fmt(s.netWorth)} ⚙`;
+    document.getElementById('hdr-rep').textContent = s.reputation.toFixed(0);
+    document.getElementById('game-date').textContent = GameState.timeStr();
+    document.getElementById('game-time').textContent = GameState.seasonStr();
+    const rank = GameState.getPlayerRank(AITraders.getTraders());
+    document.getElementById('hdr-rank').textContent = `#${rank}`;
+  }
+
+  // ── MARKET ──
+  function renderMarket() {
+    const tbody = document.getElementById('market-tbody');
+    if (!tbody) return;
+    const items = Object.entries(Economy.ALL_ITEMS)
+      .filter(([k,v]) => marketFilter === 'all' || v.category === marketFilter);
+
+    document.getElementById('market-active-traders').textContent =
+      `${AITraders.getTraders().length} traders active`;
+
+    tbody.innerHTML = items.map(([key, item], idx) => {
+      const m = Economy.market[key];
+      if (!m) return '';
+      const chg = m.lastChange;
+      const chgPct = ((chg / m.price) * 100).toFixed(1);
+      const chgClass = chg > 0.01 ? 'price-up' : chg < -0.01 ? 'price-down' : 'price-flat';
+      const chgArrow = chg > 0.01 ? '▲' : chg < -0.01 ? '▼' : '—';
+
+      const ratio = m.supply / Math.max(m.demand, 1);
+      const supplyLabel = ratio > 1.5 ? 'Abundant' : ratio > 0.8 ? 'Normal' : 'Scarce';
+      const supplyColor = ratio > 1.5 ? 'var(--price-up)' : ratio > 0.8 ? 'var(--ink-light)' : 'var(--price-down)';
+
+      const demandLabel = m.demand > 600 ? 'High' : m.demand > 300 ? 'Normal' : 'Low';
+      const demandColor = m.demand > 600 ? 'var(--price-up)' : m.demand > 300 ? 'var(--ink-light)' : 'var(--price-down)';
+
+      // Sparkline
+      const hist = m.history;
+      const hmin = Math.min(...hist), hmax = Math.max(...hist);
+      const range = hmax - hmin || 1;
+      const bars = hist.slice(-8).map(p => {
+        const h = Math.max(2, Math.round(((p - hmin) / range) * 26));
+        return `<div class="spark-bar" style="height:${h}px"></div>`;
+      }).join('');
+
+      return `<tr id="mrow-${key}">
+        <td style="color:var(--ink-light);font-size:12px">${idx+1}</td>
+        <td>
+          <span style="font-size:18px;margin-right:6px">${item.icon}</span>
+          <span style="font-family:'Playfair Display',serif;font-weight:700">${item.name}</span>
+          <span style="display:block;font-size:11px;font-style:italic;color:var(--ink-light)">${item.desc}</span>
+        </td>
+        <td>
+          <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700">
+            ${fmt(m.price)}
+          </span>
+          <span style="font-size:11px;color:var(--ink-light)"> ⚙</span>
+        </td>
+        <td class="${chgClass}" style="white-space:nowrap">
+          ${chgArrow} ${Math.abs(parseFloat(chgPct))}%
+        </td>
+        <td style="color:${supplyColor};font-size:13px">${supplyLabel}</td>
+        <td style="color:${demandColor};font-size:13px">${demandLabel}</td>
+        <td style="font-size:13px;color:var(--ink-light)">${Math.floor(m.dailyVolume)}</td>
+        <td class="spark-cell"><div class="sparkline">${bars}</div></td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-buy btn-sm" onclick="UI.openTradeModal('${key}','buy')">Buy</button>
+          <button class="btn btn-sell btn-sm" style="margin-left:4px" onclick="UI.openTradeModal('${key}','sell')">Sell</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function flashMarketRow(key, direction) {
+    const row = document.getElementById(`mrow-${key}`);
+    if (row) {
+      row.classList.remove('flash-green', 'flash-red');
+      void row.offsetWidth; // reflow
+      row.classList.add(direction > 0 ? 'flash-green' : 'flash-red');
+    }
+  }
+
+  // ── INVENTORY ──
+  function renderInventory() {
+    const grid = document.getElementById('inv-grid');
+    if (!grid) return;
+    const inv = GameState.state.inventory;
+    const allItems = Economy.ALL_ITEMS;
+    let html = '';
+    for (const [key, item] of Object.entries(allItems)) {
+      const qty = inv[key] || 0;
+      const isEmpty = qty === 0;
+      html += `<div class="inv-slot ${isEmpty ? 'inv-empty' : ''}" 
+                onclick="UI.openTradeModal('${key}','sell')" title="${item.desc}">
+        <span class="inv-icon">${item.icon}</span>
+        <span class="inv-name">${item.name}</span>
+        <span class="inv-qty">${qty}</span>
+      </div>`;
+    }
+    grid.innerHTML = html;
+    document.getElementById('inv-count').textContent =
+      `${GameState.getInventoryCount()} / ${GameState.getCarryCapacity()} capacity`;
+
+    // Ledger
+    const s = GameState.state;
+    document.getElementById('ledger-stats').innerHTML = `
+      <table style="width:100%;font-size:14px;font-family:'Crimson Text',serif;">
+        <tr><td style="padding:5px 0;color:var(--ink-light)">Treasury</td><td style="text-align:right;font-weight:700;color:var(--brass-dark)">${fmt(s.gold)} ⚙</td></tr>
+        <tr><td style="padding:5px 0;color:var(--ink-light)">Inventory Value</td><td style="text-align:right;">${fmt(s.netWorth - s.gold)} ⚙</td></tr>
+        <tr><td style="padding:5px 0;color:var(--ink-light)">Net Worth</td><td style="text-align:right;font-weight:700;">${fmt(s.netWorth)} ⚙</td></tr>
+        <tr><td colspan="2"><hr class="section-rule"></td></tr>
+        <tr><td style="padding:5px 0;color:var(--ink-light)">Trades Completed</td><td style="text-align:right;">${s.tradeCount}</td></tr>
+        <tr><td style="padding:5px 0;color:var(--ink-light)">Items Crafted</td><td style="text-align:right;">${s.craftCount || 0}</td></tr>
+        <tr><td style="padding:5px 0;color:var(--ink-light)">Market Rank</td><td style="text-align:right;">#${GameState.getPlayerRank(AITraders.getTraders())}</td></tr>
+      </table>`;
+
+    // Reputation
+    const rep = s.reputation;
+    const repLabel = rep >= 80 ? 'Renowned' : rep >= 60 ? 'Respected' : rep >= 40 ? 'Known' : rep >= 20 ? 'Suspect' : 'Notorious';
+    document.getElementById('rep-panel').innerHTML = `
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="rep-ring" style="--pct:${rep}%">
+          <div class="rep-ring-inner"><div class="rep-value">${rep.toFixed(0)}</div><div class="rep-label">REP</div></div>
+        </div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700">${repLabel}</div>
+          <div style="font-size:12px;font-style:italic;color:var(--ink-light);margin-top:4px">Your standing in the markets of Auvenmoor</div>
+          <div class="progress-track" style="margin-top:8px;width:160px">
+            <div class="progress-fill rep" style="width:${rep}%"></div>
+          </div>
+        </div>
+      </div>`;
+
+    // Upgrades
+    const upg = GameState.UPGRADES;
+    let upgHtml = '';
+    for (const [key, upgrade] of Object.entries(upg)) {
+      if (key === 'cart') continue;
+      const owned = s.upgrades.includes(key);
+      const canBuy = GameState.canBuyUpgrade(key);
+      upgHtml += `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(139,94,60,0.15);">
+        <span style="font-size:22px">${upgrade.icon}</span>
+        <div style="flex:1">
+          <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700">${upgrade.name}</div>
+          <div style="font-size:11px;font-style:italic;color:var(--ink-light)">${upgrade.desc}</div>
+        </div>
+        ${owned ? '<span style="font-size:11px;color:var(--price-up);font-family:\'IM Fell English\',serif">Owned</span>'
+          : `<button class="btn btn-primary btn-sm" ${canBuy ? '' : 'disabled'} onclick="UI.buyUpgrade('${key}')">
+              ${fmt(upgrade.cost)} ⚙
+            </button>`}
+      </div>`;
+    }
+    document.getElementById('upgrades-panel').innerHTML = upgHtml;
+  }
+
+  function buyUpgrade(key) {
+    const result = GameState.buyUpgrade(key);
+    if (result) {
+      const u = GameState.UPGRADES[key];
+      toast(`${u.icon} ${u.name} acquired!`, 'success');
+      renderInventory();
+      renderHeader();
+    } else {
+      toast('Insufficient funds.', 'error');
+    }
+  }
+
+  // ── CRAFTING ──
+  function renderCrafting() {
+    const container = document.getElementById('crafting-list');
+    if (!container) return;
+    const player = GameState.state;
+    let html = '';
+    for (const [key, recipe] of Object.entries(Crafting.RECIPES)) {
+      const outItem = Economy.ALL_ITEMS[recipe.output];
+      const marketPrice = Economy.market[recipe.output]?.price || outItem?.basePrice || 0;
+      const canCraft = Crafting.canCraft(key, player);
+      const hasWorkshop = recipe.workshop === 'none' || player.upgrades.includes(recipe.workshop);
+
+      let ingredients = '';
+      for (const [item, qty] of Object.entries(recipe.inputs)) {
+        const itm = Economy.ALL_ITEMS[item];
+        const have = player.inventory[item] || 0;
+        const ok = have >= qty;
+        ingredients += `<span class="ingredient-tag ${ok ? 'ok' : 'missing'}">
+          ${itm?.icon || ''} ${itm?.name || item} ×${qty}
+          <span style="font-size:9px;opacity:0.7">(${have})</span>
+        </span>`;
+      }
+
+      html += `<div class="recipe-card ${canCraft ? 'can-craft' : ''}">
+        <span class="recipe-output">${outItem?.icon || '❓'}</span>
+        <div class="recipe-info">
+          <div class="recipe-name">${outItem?.name || recipe.output}</div>
+          <div class="recipe-desc">${recipe.desc}</div>
+          <div class="recipe-ingredients" style="margin-top:6px">${ingredients}</div>
+          ${!hasWorkshop ? `<div style="font-size:11px;color:var(--price-down);margin-top:6px;font-style:italic">
+            Requires: ${recipe.workshop} (buy in Upgrades)
+          </div>` : ''}
+        </div>
+        <div class="recipe-value">
+          <div class="recipe-gold">${fmt(marketPrice)} ⚙</div>
+          <div style="font-size:10px;font-style:italic;color:var(--ink-light);margin-bottom:6px">per unit</div>
+          <button class="btn btn-craft btn-sm" ${canCraft ? '' : 'disabled'}
+            onclick="UI.craftItem('${key}')">
+            Craft ×${recipe.qty}
+          </button>
+        </div>
+      </div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function craftItem(key) {
+    const result = Crafting.craft(key, GameState.state);
+    if (result.ok) {
+      const item = Economy.ALL_ITEMS[result.item];
+      toast(`${item?.icon} Crafted ${result.qty}x ${item?.name || result.item}!`, 'success');
+      GameState.state.reputation = Math.min(100, GameState.state.reputation + 0.5);
+      renderCrafting();
+      renderHeader();
+    } else {
+      toast(result.msg, 'error');
+    }
+  }
+
+  // ── ORDERS ──
+  function renderOrders() {
+    const orders = Market.getOrders();
+    const openOrders = orders.filter(o => o.status === 'open');
+    const history = Market.getHistory();
+
+    // Active orders
+    const container = document.getElementById('active-orders-list');
+    if (!container) return;
+    if (!openOrders.length) {
+      container.innerHTML = `<p class="text-muted text-center" style="padding:20px">
+        No open orders. Place buy/sell orders from the Market tab.</p>`;
+    } else {
+      container.innerHTML = openOrders.map(o => {
+        const item = Economy.ALL_ITEMS[o.item];
+        return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(139,94,60,0.15)">
+          <span style="font-size:20px">${item?.icon || '?'}</span>
+          <div style="flex:1">
+            <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700">
+              ${o.type === 'buy' ? '📥' : '📤'} ${o.type.toUpperCase()} ${o.qty}x ${item?.name}
+            </div>
+            <div style="font-size:12px;color:var(--ink-light);font-style:italic">
+              Limit: ${fmt(o.price)} ⚙ · Placed: ${o.created}
+            </div>
+          </div>
+          <button class="btn btn-sell btn-sm" onclick="UI.cancelOrder(${o.id})">Cancel</button>
+        </div>`;
+      }).join('');
+    }
+
+    // Order book
+    const sel = document.getElementById('orderbook-item');
+    if (sel && !sel.dataset.init) {
+      sel.dataset.init = '1';
+      sel.innerHTML = Object.entries(Economy.ALL_ITEMS).map(([k,v]) =>
+        `<option value="${k}">${v.icon} ${v.name}</option>`).join('');
+      sel.addEventListener('change', renderOrderBook);
+    }
+    renderOrderBook();
+
+    // Trade history
+    const histEl = document.getElementById('trade-history-list');
+    if (!histEl) return;
+    if (!history.length) {
+      histEl.innerHTML = `<p class="text-muted text-center" style="padding:20px">No trades recorded yet.</p>`;
+    } else {
+      histEl.innerHTML = history.slice(0,30).map(h => {
+        const item = Economy.ALL_ITEMS[h.item];
+        const isBuy = h.type === 'buy';
+        return `<div style="display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dotted rgba(139,94,60,0.2)">
+          <span style="font-size:16px">${item?.icon || '?'}</span>
+          <div style="flex:1;font-size:13px">
+            <span class="${isBuy ? 'price-up' : 'price-down'}" style="font-weight:600">
+              ${isBuy ? 'Bought' : 'Sold'}</span>
+            ${h.qty}x ${item?.name} @ ${fmt(h.price)} ⚙
+          </div>
+          <div style="text-align:right;font-size:12px">
+            <div style="${isBuy ? 'color:var(--price-down)' : 'color:var(--price-up)'};font-weight:600">
+              ${isBuy ? '-' : '+'}${fmt(h.total)} ⚙</div>
+            <div style="color:var(--ink-light);font-size:10px">${h.time}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  function renderOrderBook() {
+    const sel = document.getElementById('orderbook-item');
+    if (!sel) return;
+    const key = sel.value;
+    if (!key) return;
+    const { buys, sells } = Market.getOrderBook(key);
+    const el = document.getElementById('order-book-display');
+    if (!el) return;
+    el.innerHTML = `
+      <div class="order-side">
+        <div class="order-side-title buy">Buy Orders</div>
+        ${buys.map(o => `<div class="order-row buy">
+          <span class="price">${fmt(o.price)}</span>
+          <span>${o.qty} units</span>
+        </div>`).join('')}
+      </div>
+      <div class="order-side">
+        <div class="order-side-title sell">Sell Orders</div>
+        ${sells.map(o => `<div class="order-row sell">
+          <span class="price">${fmt(o.price)}</span>
+          <span>${o.qty} units</span>
+        </div>`).join('')}
+      </div>`;
+  }
+
+  function cancelOrder(id) {
+    const r = Market.cancelOrder(id, GameState.state);
+    if (r.ok) { toast('Order cancelled.', 'info'); renderOrders(); renderHeader(); }
+  }
+
+  // ── TRADERS ──
+  function renderTraders() {
+    const lb = document.getElementById('leaderboard-list');
+    const gl = document.getElementById('guild-list');
+    if (!lb || !gl) return;
+
+    const leaders = AITraders.getLeaderboard();
+    const playerNW = GameState.state.netWorth;
+    const allSorted = [
+      ...leaders,
+      { id:'player', name:'You', profession:'Merchant', icon:'⭐', color:'#d4aa4a',
+        wealth: playerNW, guild: null, reputation: GameState.state.reputation, _isPlayer: true }
+    ].sort((a,b) => b.wealth - a.wealth).slice(0, 25);
+
+    lb.innerHTML = allSorted.map((t, i) => {
+      const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+      return `<div class="trader-row ${t._isPlayer ? 'flash-green' : ''}">
+        <div class="trader-rank-badge ${rankClass}">${i+1}</div>
+        <div class="trader-avatar" style="background:${t.color}20;border-color:${t.color}40">${t.icon}</div>
+        <div class="trader-info">
+          <div class="trader-name">${t.name} ${t._isPlayer ? '⭐' : ''}</div>
+          <div class="trader-title">${t.profession}${t.guild ? ` · ${t.guild}` : ''}</div>
+        </div>
+        <div class="trader-wealth">${fmtShort(t.wealth)} ⚙</div>
+      </div>`;
+    }).join('');
+
+    // Guilds
+    const guilds = AITraders.getGuilds();
+    gl.innerHTML = guilds.map(g => {
+      const totalMembers = AITraders.getTraders().filter(t => t.guild === g.name).length;
+      return `<div style="padding:12px 0;border-bottom:1px solid rgba(139,94,60,0.2)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-size:24px">${g.icon}</span>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700">${g.name}</div>
+            <div style="font-size:11px;color:var(--ink-light);font-style:italic">${totalMembers} members</div>
+          </div>
+          <div style="margin-left:auto;text-align:right">
+            <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--brass-dark)">${fmtShort(g.wealth)} ⚙</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">
+          ${g.focus.map(f => {
+            const item = Economy.ALL_ITEMS[f];
+            return item ? `<span class="ingredient-tag ok">${item.icon} ${item.name}</span>` : '';
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── NEWS ──
+  function renderNews() {
+    const log = News.getLog();
+    const el = document.getElementById('news-log');
+    if (!el) return;
+    el.innerHTML = log.map(n => `
+      <div class="news-entry ${n.type}">
+        <div class="news-entry-time">${n.time}</div>
+        <div class="news-entry-text">"${n.text}"</div>
+        <div class="news-entry-effect">
+          ${n.type === 'positive' ? '📈 Positive market impact' :
+            n.type === 'negative' ? '📉 Negative market impact' :
+            n.type === 'urgent'   ? '⚠ Major market disruption' : ''}
+          · Affects: <strong>${Economy.ALL_ITEMS[n.item]?.name || n.item}</strong>
+        </div>
+      </div>`).join('') || '<p class="text-muted text-center" style="padding:20px">No news yet.</p>';
+
+    // Price charts
+    renderPriceCharts();
+  }
+
+  function renderPriceCharts() {
+    const container = document.getElementById('price-charts-panel');
+    if (!container) return;
+    const items = ['iron','wheat','weapons','potions','silver','gold'];
+    let html = `<div class="tab-bar" id="chart-tabs">`;
+    items.forEach((k, i) => {
+      const item = Economy.ALL_ITEMS[k];
+      html += `<button class="tab-btn ${i===0?'active':''}" onclick="UI.showChart('${k}',this)">${item.icon} ${item.name}</button>`;
+    });
+    html += `</div><div id="chart-display"></div>`;
+    container.innerHTML = html;
+    showChart(items[0], container.querySelector('.tab-btn.active'));
+  }
+
+  function showChart(key, btn) {
+    if (btn) {
+      document.querySelectorAll('#chart-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    const container = document.getElementById('chart-display');
+    if (!container) return;
+    const m = Economy.market[key];
+    const item = Economy.ALL_ITEMS[key];
+    if (!m || !item) return;
+
+    const hist = m.history;
+    const minP = Math.min(...hist) * 0.95;
+    const maxP = Math.max(...hist) * 1.05;
+    const W = 400, H = 120;
+    const pts = hist.map((p, i) => {
+      const x = (i / (hist.length - 1)) * W;
+      const y = H - ((p - minP) / (maxP - minP)) * H;
+      return `${x},${y}`;
+    }).join(' ');
+
+    const lastPrice = hist[hist.length - 1];
+    const firstPrice = hist[0];
+    const trend = lastPrice > firstPrice ? '#1a5c2a' : '#6b1a1a';
+
+    container.innerHTML = `
+      <div style="padding:10px 0">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-family:'Playfair Display',serif">
+          <span style="font-size:14px;font-weight:700">${item.icon} ${item.name}</span>
+          <span style="font-size:16px;font-weight:700;color:var(--brass-dark)">${fmt(m.price)} ⚙</span>
+        </div>
+        <div class="price-chart-container">
+          <svg class="price-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${trend}" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="${trend}" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <polyline points="${pts}" fill="none" stroke="${trend}" stroke-width="2"/>
+            <polygon points="0,${H} ${pts} ${W},${H}" fill="url(#chartGrad)"/>
+          </svg>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--ink-light);font-style:italic">
+          <span>Low: ${fmt(minP)}</span>
+          <span>High: ${fmt(maxP)}</span>
+          <span>Vol: ${Math.floor(m.dailyVolume)}</span>
+        </div>
+      </div>`;
+  }
+
+  // ── OVERVIEW ──
+  function renderOverview() {
+    const s = GameState.state;
+    const traders = AITraders.getTraders();
+    const rank = GameState.getPlayerRank(traders);
+    const totalGold = traders.reduce((a,t) => a + t.wealth, 0) + s.netWorth;
+
+    document.getElementById('overview-cards').innerHTML = `
+      <div class="dash-card">
+        <div class="dash-card-label">Your Treasury</div>
+        <div class="dash-card-value gold">${fmt(s.gold)} ⚙</div>
+        <div class="dash-card-delta">in hand</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Net Worth</div>
+        <div class="dash-card-value gold">${fmt(s.netWorth)} ⚙</div>
+        <div class="dash-card-delta">incl. inventory</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Market Rank</div>
+        <div class="dash-card-value">#${rank}</div>
+        <div class="dash-card-delta">of ${traders.length + 1} traders</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Reputation</div>
+        <div class="dash-card-value">${s.reputation.toFixed(0)}</div>
+        <div class="dash-card-delta delta-${s.reputation >= 50 ? 'up' : 'down'}">${
+          s.reputation >= 80 ? 'Renowned' : s.reputation >= 60 ? 'Respected' :
+          s.reputation >= 40 ? 'Known' : 'Suspect'
+        }</div>
+      </div>`;
+
+    // Economy summary
+    const market = Economy.market;
+    const topMovers = Object.entries(market)
+      .sort((a,b) => Math.abs(b[1].lastChange) - Math.abs(a[1].lastChange))
+      .slice(0, 5);
+
+    document.getElementById('economy-overview').innerHTML = `
+      <div style="margin-bottom:14px">
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:8px">Top Market Movers</div>
+        ${topMovers.map(([k,m]) => {
+          const item = Economy.ALL_ITEMS[k];
+          const chg = m.lastChange;
+          return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dotted rgba(139,94,60,0.15)">
+            <span style="font-size:18px">${item?.icon}</span>
+            <span style="flex:1;font-family:'Playfair Display',serif;font-size:13px">${item?.name}</span>
+            <span style="font-weight:700">${fmt(m.price)} ⚙</span>
+            <span class="${chg > 0 ? 'price-up' : 'price-down'}" style="font-size:13px;width:60px;text-align:right">
+              ${chg > 0 ? '▲' : '▼'} ${Math.abs(((chg/m.price)*100)).toFixed(1)}%
+            </span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="ornament">— ⚜ —</div>
+      <div style="margin-top:12px;font-size:13px;color:var(--ink-light);font-style:italic">
+        Total market wealth: ${fmtShort(totalGold)} ⚙ across ${traders.length + 1} traders
+        and ${AITraders.getGuilds().length} guilds.
+      </div>`;
+
+    // Save/Load panel
+    document.getElementById('save-panel').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <p style="font-style:italic;color:var(--ink-light);font-size:13px">
+          Your progress is saved automatically every 5 minutes, or save manually here.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="UI.saveGame()">💾 Save Game</button>
+          <button class="btn btn-buy" onclick="UI.loadGame()">📂 Load Save</button>
+          <button class="btn btn-sell" onclick="UI.resetGame()">🔄 New Game</button>
+        </div>
+        <div id="save-status" style="font-size:12px;color:var(--ink-light);font-style:italic"></div>
+        <hr class="section-rule">
+        <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:700;margin-bottom:4px">Your Assets</div>
+        ${s.upgrades.map(k => {
+          const u = GameState.UPGRADES[k];
+          return u ? `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px">
+            <span>${u.icon}</span><span>${u.name}</span>
+          </div>` : '';
+        }).join('')}
+      </div>`;
+  }
+
+  // ── TRADE MODAL ──
+  function openTradeModal(itemKey, type) {
+    const item = Economy.ALL_ITEMS[itemKey];
+    const m = Economy.market[itemKey];
+    if (!item || !m) return;
+    const s = GameState.state;
+    const haveInv = s.inventory[itemKey] || 0;
+
+    document.getElementById('modal-title').textContent =
+      `${type === 'buy' ? 'Buy' : 'Sell'} ${item.icon} ${item.name}`;
+
+    const modal = document.getElementById('modal-body');
+    modal.innerHTML = `
+      <div style="margin-bottom:14px;padding:12px;background:rgba(0,0,0,0.04);border-radius:3px;border:1px solid var(--parchment-aged)">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div>
+            <div style="font-family:'IM Fell English',serif;font-size:11px;color:var(--ink-light);letter-spacing:1px">MARKET PRICE</div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--brass-dark)">${fmt(m.price)} ⚙</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:'IM Fell English',serif;font-size:11px;color:var(--ink-light);letter-spacing:1px">YOUR TREASURY</div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700">${fmt(s.gold)} ⚙</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:'IM Fell English',serif;font-size:11px;color:var(--ink-light);letter-spacing:1px">IN INVENTORY</div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700">${haveInv}</div>
+          </div>
+        </div>
+      </div>
+      <div class="trade-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <input type="number" class="form-input" id="trade-qty" value="1" min="1" max="${type==='sell'?haveInv:9999}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Limit Price (0 = market)</label>
+            <input type="number" class="form-input" id="trade-price" value="${fmt(m.price)}" step="0.01" min="0.01">
+          </div>
+        </div>
+        <div id="trade-preview" style="margin-top:12px;font-size:13px;color:var(--ink-light);font-style:italic"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">
+        <button class="btn" onclick="UI.closeModal()" style="background:var(--parchment-aged);color:var(--ink)">Cancel</button>
+        <button class="btn ${type==='buy'?'btn-buy':'btn-sell'}" id="confirm-trade"
+          onclick="UI.confirmTrade('${itemKey}','${type}')">
+          ${type === 'buy' ? '📥 Confirm Buy' : '📤 Confirm Sell'}
+        </button>
+      </div>`;
+
+    // Preview update
+    const updatePreview = () => {
+      const qty = parseInt(document.getElementById('trade-qty').value) || 0;
+      const price = parseFloat(document.getElementById('trade-price').value) || m.price;
+      const total = qty * price;
+      const el = document.getElementById('trade-preview');
+      if (el) {
+        el.innerHTML = type === 'buy'
+          ? `Total cost: <strong>${fmt(total)} ⚙</strong> · After: <strong>${fmt(s.gold - total)} ⚙</strong>`
+          : `Total revenue: <strong>${fmt(total)} ⚙</strong> · After: <strong>${fmt(s.gold + total)} ⚙</strong>`;
+      }
+    };
+    setTimeout(() => {
+      document.getElementById('trade-qty')?.addEventListener('input', updatePreview);
+      document.getElementById('trade-price')?.addEventListener('input', updatePreview);
+      updatePreview();
+    }, 50);
+
+    document.getElementById('trade-modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('trade-modal').classList.remove('open');
+  }
+
+  function confirmTrade(itemKey, type) {
+    const qty = parseInt(document.getElementById('trade-qty')?.value) || 0;
+    const limitPrice = parseFloat(document.getElementById('trade-price')?.value) || Economy.market[itemKey]?.price;
+    if (qty < 1) { toast('Enter a valid quantity.', 'error'); return; }
+
+    let result;
+    if (type === 'buy') {
+      result = Market.placeBuyOrder(itemKey, qty, limitPrice, GameState.state);
+    } else {
+      result = Market.placeSellOrder(itemKey, qty, limitPrice, GameState.state);
+    }
+
+    if (result.ok) {
+      closeModal();
+      if (result.filled) {
+        const item = Economy.ALL_ITEMS[itemKey];
+        toast(`${item.icon} ${type === 'buy' ? 'Bought' : 'Sold'} ${qty}x ${item.name} for ${fmt(result.cost || result.revenue)} ⚙`, 'success');
+        GameState.state.reputation = Math.min(100, GameState.state.reputation + 0.3);
+      } else {
+        toast(`Order placed. Will fill when price is right.`, 'info');
+      }
+      renderHeader();
+      if (currentTab === 'market') renderMarket();
+      if (currentTab === 'inventory') renderInventory();
+    } else {
+      toast(result.msg, 'error');
+    }
+  }
+
+  // ── NEWS TICKER ──
+  function renderNewsTicker() {
+    const log = News.getLog();
+    const el = document.getElementById('news-ticker');
+    if (!el || !log.length) return;
+    const items = log.slice(0, 12).map(n =>
+      `<span class="news-item">${n.text}</span>`
+    ).join('');
+    el.innerHTML = items + items; // double for seamless loop
+  }
+
+  // ── TOAST ──
+  function toast(msg, type = 'info') {
+    const container = document.getElementById('toast-container');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<span class="toast-icon"></span><span>${msg}</span>`;
+    container.appendChild(el);
+    setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.3s';
+      setTimeout(() => el.remove(), 300);
+    }, 3500);
+  }
+
+  // ── SAVE/LOAD ──
+  function saveGame() {
+    const data = {
+      gameState: GameState.save(),
+      marketState: Object.fromEntries(
+        Object.entries(Economy.market).map(([k,v]) => [k, {
+          price: v.price, supply: v.supply, demand: v.demand,
+          history: v.history, dailyVolume: v.dailyVolume
+        }])
+      ),
+      newsLog: News.getLog().slice(0, 20),
+    };
+    localStorage.setItem('merchantLedger_save', JSON.stringify(data));
+    document.getElementById('save-status').textContent = 'Saved at ' + new Date().toLocaleTimeString();
+    toast('⚜ Game saved to your ledger.', 'success');
+  }
+
+  function loadGame() {
+    const raw = localStorage.getItem('merchantLedger_save');
+    if (!raw) { toast('No save found.', 'error'); return; }
+    try {
+      const data = JSON.parse(raw);
+      GameState.load(data.gameState);
+      // Restore market
+      if (data.marketState) {
+        for (const [k, v] of Object.entries(data.marketState)) {
+          if (Economy.market[k]) {
+            Object.assign(Economy.market[k], v);
+          }
+        }
+      }
+      toast('⚜ Ledger loaded.', 'success');
+      renderHeader();
+      renderTab(currentTab);
+    } catch(e) {
+      toast('Failed to load save.', 'error');
+    }
+  }
+
+  function resetGame() {
+    if (!confirm('Start a new game? All progress will be lost.')) return;
+    localStorage.removeItem('merchantLedger_save');
+    location.reload();
+  }
+
+  // ── HELPERS ──
+  function fmt(n) {
+    if (isNaN(n)) return '0';
+    return n.toFixed(n < 10 ? 2 : n < 100 ? 1 : 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function fmtShort(n) {
+    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n/1000).toFixed(1) + 'k';
+    return Math.floor(n).toString();
+  }
+
+  return {
+    initTabs, renderHeader, renderMarket, renderInventory,
+    renderCrafting, renderOrders, renderTraders, renderNews,
+    renderOverview, renderNewsTicker, renderTab, flashMarketRow,
+    openTradeModal, closeModal, confirmTrade,
+    craftItem, buyUpgrade, cancelOrder, showChart,
+    saveGame, loadGame, resetGame, toast, fmt
+  };
+})();
+
+/* ============================================================
+   GAME LOOP — Master tick controller
+   ============================================================ */
+const GameLoop = (() => {
+
+  const TICK_INTERVAL = 2000; // 2s per game tick
+  let tickCount = 0;
+  let running = false;
+  let interval = null;
+
+  function tick() {
+    tickCount++;
+    // Economy tick
+    Economy.tick();
+    // AI traders act
+    AITraders.tick();
+    // Process player orders
+    Market.processPendingOrders(GameState.state);
+    // News
+    const news = News.tick();
+    if (news) {
+      UI.renderNewsTicker();
+      // Flash relevant market row
+      if (news.item) {
+        const chg = Economy.market[news.item]?.lastChange || 0;
+        UI.flashMarketRow(news.item, chg);
+      }
+    }
+    // Game state tick
+    GameState.tick();
+    // Update header every tick
+    UI.renderHeader();
+    // Update active tab
+    const tab = document.querySelector('.nav-tab.active')?.dataset?.tab;
+    if (tab) UI.renderTab(tab);
+    // Auto-save every 150 ticks (~5min)
+    if (tickCount % 150 === 0) UI.saveGame();
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    interval = setInterval(tick, TICK_INTERVAL);
+  }
+
+  function stop() {
+    running = false;
+    clearInterval(interval);
+  }
+
+  return { start, stop, tick };
+})();
+
+/* ============================================================
+   BOOTSTRAP — Initialize everything
+   ============================================================ */
+async function bootstrap() {
+  const loadingTexts = [
+    'Summoning merchants to the marketplace...',
+    'Consulting the guild ledgers...',
+    'Setting prices at the exchange...',
+    'Dispatching caravans to distant lands...',
+    'Drafting trade agreements...',
+    'Opening the grand market gates...',
+  ];
+  const bar = document.getElementById('loading-bar');
+  const txt = document.getElementById('loading-text');
+
+  for (let i = 0; i <= 100; i += 17) {
+    bar.style.width = i + '%';
+    txt.textContent = loadingTexts[Math.floor(i/17)] || loadingTexts[loadingTexts.length-1];
+    await new Promise(r => setTimeout(r, 200));
+  }
+  bar.style.width = '100%';
+
+  // Initialize systems
+  Economy.init();
+  AITraders.generate(200);
+  GameState.init();
+
+  // Try to load save
+  const raw = localStorage.getItem('merchantLedger_save');
+  if (raw) {
+    try {
+      const data = JSON.parse(raw);
+      GameState.load(data.gameState);
+      if (data.marketState) {
+        for (const [k, v] of Object.entries(data.marketState)) {
+          if (Economy.market[k]) Object.assign(Economy.market[k], v);
+        }
+      }
+    } catch(e) { /* ignore */ }
+  }
+
+  // Seed some initial news
+  for (let i = 0; i < 5; i++) {
+    // Force a few news items
+    const items = Object.keys(Economy.ALL_ITEMS);
+    const item = items[Math.floor(Math.random() * items.length)];
+    Economy.shockMarket(item, (Math.random()-0.5)*100, (Math.random()-0.5)*80);
+  }
+  // Generate initial news manually
+  for (let i = 0; i < 6; i++) {
+    // Directly call tick enough times to seed news
+    for (let j = 0; j < 10; j++) { /* empty */ }
+  }
+  // Use the news generator directly a few times
+  ['iron','wheat','weapons','silver','herbs'].forEach((item) => {
+    const templates = [
+      `The great markets of Auvenmoor open their gates for the ${847}th year of trade.`,
+      `Merchant caravans from the East arrive bearing exotic ${Economy.ALL_ITEMS[item]?.name || item}.`,
+    ];
+    News.getLog().push({
+      time: 'Year 847, Day 1',
+      text: templates[Math.floor(Math.random() * templates.length)],
+      type: 'positive',
+      item,
+      intensity: 'low',
+    });
+  });
+
+  // Init UI
+  UI.initTabs();
+  UI.renderHeader();
+  UI.renderMarket();
+  UI.renderNewsTicker();
+
+  // Fade out loading screen
+  await new Promise(r => setTimeout(r, 300));
+  const ls = document.getElementById('loading-screen');
+  ls.style.opacity = '0';
+  setTimeout(() => ls.remove(), 600);
+
+  // Start game loop
+  GameLoop.start();
+
+  // Welcome toast
+  setTimeout(() => {
+    UI.toast('⚜ Welcome to the Grand Market of Auvenmoor. May your ledger grow fat with gold.', 'info');
+  }, 800);
+
+  // Close modal on overlay click
+  document.getElementById('trade-modal').addEventListener('click', function(e) {
+    if (e.target === this) UI.closeModal();
+  });
+}
+
+// Start when fonts loaded
+if (document.fonts) {
+  document.fonts.ready.then(bootstrap);
+} else {
+  setTimeout(bootstrap, 500);
+}
+</script>
+</body>
+</html>
